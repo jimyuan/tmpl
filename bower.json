@@ -1,0 +1,15 @@
+{
+  "name": "bdc-site-template",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jimyuan/tmpl.git",
+  "authors": [
+    "Jim Yuan <aquarior@gmail.com>"
+  ],
+  "description": "This is a normal template for develop in big-data-cluster team.",
+  "keywords": [
+    "sass",
+    "gulp"
+  ],
+  "ignore": [],
+  "dependencies": {}
+}

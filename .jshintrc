@@ -1,0 +1,16 @@
+{
+  "asi"      : false,
+  "boss"     : true,
+  "browser"  : true,
+  "curly"    : false,
+  "debug"    : true,
+  "devel"    : true,
+  "eqeqeq"   : true,
+  "eqnull"   : true,
+  "expr"     : true,
+  "laxbreak" : true,
+  "laxcomma" : true,
+  "jquery"   : true,
+  "node"     : true,
+  "validthis": true
+}
