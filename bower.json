@@ -11,5 +11,8 @@
     "gulp"
   ],
   "ignore": [],
-  "dependencies": {}
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "sandal": "https://github.com/marvin1023/sandal.git"
+  }
 }

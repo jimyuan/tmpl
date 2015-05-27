@@ -3,20 +3,19 @@
 ## 开发环境
 用 Gulp 搭建前端自动化模块，并在项目中会应用到 sass(campass) 预处理工具，所需环境如下
 
-### ruby
-* compass
-
 ### node
 * gulp
 * bower
 
 ## gulpfile主要模块
-* test —— js 语法测试
-* sass —— scss 编译
-* html —— css 和 js 文件合并压缩以及混淆
+* test    —— js 语法测试
+* sass    —— scss 编译
+* html    —— css 和 js 文件合并压缩以及混淆
+* image   —— 图像优化压缩
+* static  —— 静态模板渲染
 * connect —— 建立一个 http 环境，并设置 liveload 端口
-* server —— 打开浏览器窗口
-* watch —— 文件变化观察
+* server  —— 打开浏览器窗口
+* watch   —— 文件变化观察
 
 ## 常用 gulp 指令
 * `gulp test`  —— 测试网站各 js 文件

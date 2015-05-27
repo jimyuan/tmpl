@@ -5,10 +5,16 @@
         app:  'app', 
         dist: 'dist', 
         sass: 'app/sass',
+        tmpl: 'app/src',        
         js:   'app/js',
         css:  'app/css',
         img:  'app/img'
       };
+
+  function handleError(error){
+    console.log(error.message);
+    this.emit('end');
+  } 
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ jshint
@@ -20,35 +26,54 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ copy static files to dist files
+  //| ✓ render template from html file
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('copy', function() {
-    return gulp.src(_.app + '/img/**/*')
-      .pipe(gulp.dest(_.dist + '/img/'))
+  gulp.task('static', function() {
+    return gulp.src([_.tmpl + '/*.html'])
+      .pipe($.plumber())
+      .pipe($.fileInclude({
+        prefix: '@@',
+        basepath: '@file'
+      }))
+      .pipe(gulp.dest(_.app + '/'))
       .pipe($.size());
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ sass2css
+  //| ✓ copy static files to dist files
+  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  // gulp.task('copy', function() {
+  //   return gulp.src(_.app + '/img/**/*')
+  //     .pipe(gulp.dest(_.dist + '/img/'))
+  //     .pipe($.size());
+  // });
+
+  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //| ✓ sass2css (node-sass)
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('sass', function() {
     return gulp.src(_.sass + '/**/*.{scss, sass}')
-      .pipe($.plumber({
-        errorHandler: function (error) {
-          console.log(error.message);
-          this.emit('end');
-      }}))
-      .pipe($.compass({
-        comments: true,
-        css: _.css,
-        sass: _.sass,
-        image: _.img,
-        style: 'expanded',
-        import_path: [],
-        Encoding: {default_external:'utf-8'}
+      .pipe($.plumber({ errorHandler: handleError}))
+      .pipe($.sourcemaps.init())
+      .pipe($.sass({
+        outputStyle: 'expanded',
+        includePaths: [ './bower_components/' ]
       }))
       .pipe($.autoprefixer())
+      .pipe($.sourcemaps.write('./'))
       .pipe(gulp.dest(_.css))
+      .pipe($.size());
+  });
+
+  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //| ✓ optimize images
+  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  gulp.task('image', function () {
+    return gulp.src(_.img + '/**/*')
+      .pipe($.imagemin({
+        progressive: true
+      }))
+      .pipe(gulp.dest(_.dist + '/img/'))
       .pipe($.size());
   });
 
@@ -114,9 +139,7 @@
   //| ✓ clean dist folder
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('clean', function() {
-    return $.del([_.dist + '*'], function(err) {
-      console.log('Files deleted');
-    });
+    return $.del([_.dist + '*']);
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -124,7 +147,7 @@
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('start', ['watch']);
   gulp.task('test',  ['jshint']);
-  gulp.task('build', ['clean', 'test', 'html', 'copy']);
+  gulp.task('build', ['clean', 'static', 'html', 'image']);
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ default
