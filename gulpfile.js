@@ -22,7 +22,7 @@
   gulp.task('jshint', function() {
     return gulp.src([ 'gulpfile.js' , _.js + '/**/*.js'])
       .pipe($.jshint('.jshintrc'))
-      .pipe($.jshint.reporter('default'));
+      .pipe($.jshint.reporter('jshint-stylish'));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,7 +36,9 @@
         basepath: '@file'
       }))
       .pipe(gulp.dest(_.app + '/'))
-      .pipe($.size());
+      .pipe($.size({
+        title: 'HTML files:'
+      }));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,7 +64,9 @@
       .pipe($.autoprefixer())
       .pipe($.sourcemaps.write('./'))
       .pipe(gulp.dest(_.css))
-      .pipe($.size());
+      .pipe($.size({
+        title: 'CSS files:'
+      }));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,7 +78,9 @@
         progressive: true
       }))
       .pipe(gulp.dest(_.dist + '/img/'))
-      .pipe($.size());
+      .pipe($.size({
+        title: 'IMAGE files:'
+      }));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,8 +96,7 @@
       })))
       .pipe($.useref.restore())
       .pipe($.useref())
-      .pipe(gulp.dest(_.dist))
-      .pipe($.size());
+      .pipe(gulp.dest(_.dist));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,10 +123,10 @@
   gulp.task('watch', ['server'], function() {
     $.watch({
       glob: [
-        _.app + '/*.{html,txt}',
+        _.app + '/*.html',
         _.css + '/**/*.css',
         _.img + '/**/*.{png,jpg,jpeg,gif,ico}',
-        _.js +  '/**/*.js'
+        _.js  + '/**/*.js'
       ]
     }, function(files) {
       return files.pipe($.plumber()).pipe($.connect.reload());
@@ -139,7 +144,7 @@
   //| ✓ clean dist folder
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('clean', function() {
-    return $.del([_.dist + '*']);
+    return $.del([_.dist]);
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,7 +152,9 @@
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('start', ['watch']);
   gulp.task('test',  ['jshint']);
-  gulp.task('build', ['clean', 'static', 'html', 'image']);
+  gulp.task('build', ['sass', 'clean'], function(){
+    gulp.start(['static', 'html', 'image']);
+  });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ default
