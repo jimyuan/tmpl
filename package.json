@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "name": "bdc-site-template",
   "description": "This is a normal template for develop in big-data-cluster team.",

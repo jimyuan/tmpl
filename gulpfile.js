@@ -113,7 +113,7 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ server
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('server', ['connect', 'sass'], function() {
+  gulp.task('server', ['connect', 'sass', 'static'], function() {
     $.shelljs.exec('open http://localhost:9000/app/');
   });
 
@@ -138,6 +138,13 @@
     }, function() {
       gulp.start('sass');
     });
+
+    // Watch template files
+    $.watch({
+      glob: [_.tmpl + '/**/*.html']
+    }, function() {
+      gulp.start('static');
+    });
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,8 +159,8 @@
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('start', ['watch']);
   gulp.task('test',  ['jshint']);
-  gulp.task('build', ['sass', 'clean'], function(){
-    gulp.start(['static', 'html', 'image']);
+  gulp.task('build', ['static', 'sass', 'clean'], function(){
+    gulp.start(['html', 'image']);
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
