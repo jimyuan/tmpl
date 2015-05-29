@@ -105,9 +105,7 @@
   gulp.task('connect', function() {
     $.connect.server({
       root: ['./'],
-      livereload:{
-        port: 35730 
-      },
+      livereload: true,
       port: 9000
     });
   });
@@ -123,13 +121,15 @@
   //| ✓ watch
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('watch', ['server'], function() {
-    $.watch([
-        _.app + '/*.html',
-        _.css + '/**/*.css',
-        _.img + '/**/*.{png,jpg,jpeg,gif,ico}',
-        _.js  + '/**/*.js'
-      ], function(files) {
-      return files.pipe($.plumber()).pipe($.connect.reload());
+    var wfs = [
+      _.app + '/*.html',
+      _.css + '/**/*.css',
+      _.img + '/**/*.{png,jpg,jpeg,gif,ico}',
+      _.js  + '/**/*.js'
+    ];
+    
+    $.watch(wfs, function(){
+      gulp.src(wfs).pipe($.connect.reload());
     });
 
     // Watch style files
