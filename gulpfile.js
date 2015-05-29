@@ -129,7 +129,7 @@
     ];
     
     $.watch(wfs, function(){
-      gulp.src(wfs).pipe($.connect.reload());
+      return gulp.src(wfs).pipe($.connect.reload());
     });
 
     // Watch style files
