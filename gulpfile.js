@@ -102,13 +102,15 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ connect
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('connect', $.connect.server({
-    root: ['./'],
-    livereload:{
-      port: 35730 
-    },
-    port: 9000
-  }));
+  gulp.task('connect', function() {
+    $.connect.server({
+      root: ['./'],
+      livereload:{
+        port: 35730 
+      },
+      port: 9000
+    });
+  });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ server
@@ -121,28 +123,22 @@
   //| ✓ watch
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('watch', ['server'], function() {
-    $.watch({
-      glob: [
+    $.watch([
         _.app + '/*.html',
         _.css + '/**/*.css',
         _.img + '/**/*.{png,jpg,jpeg,gif,ico}',
         _.js  + '/**/*.js'
-      ]
-    }, function(files) {
+      ], function(files) {
       return files.pipe($.plumber()).pipe($.connect.reload());
     });
 
     // Watch style files
-    $.watch({
-      glob: [_.sass + '/**/*.{sass,scss}']
-    }, function() {
+    $.watch([_.sass + '/**/*.{sass,scss}'] , function() {
       gulp.start('sass');
     });
 
     // Watch template files
-    $.watch({
-      glob: [_.tmpl + '/**/*.html']
-    }, function() {
+    $.watch([_.tmpl + '/**/*.html'], function() {
       gulp.start('static');
     });
   });

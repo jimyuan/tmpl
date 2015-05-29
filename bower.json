@@ -1,16 +1,19 @@
 {
   "name": "bdc-site-template",
-  "version": "0.0.1",
-  "homepage": "https://github.com/jimyuan/tmpl.git",
+  "version": "0.2.0",
+  "description": "This is a normal template for develop in big-data-cluster team.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jimyuan/tmpl.git"
+  },
+  "keywords": ["gulp", "sass", "static"],
   "authors": [
     "Jim Yuan <aquarior@gmail.com>"
   ],
-  "description": "This is a normal template for develop in big-data-cluster team.",
-  "keywords": [
-    "sass",
-    "gulp"
-  ],
-  "ignore": [],
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/jimyuan/tmpl/blob/master/LICENSE"
+  }],
   "dependencies": {
     "jquery": "~2.1.4",
     "sandal": "https://github.com/marvin1023/sandal.git"
