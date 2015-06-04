@@ -17,12 +17,23 @@
   } 
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ jshint
+  //| ✓ jshint - js files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('jshint', function() {
     return gulp.src([ 'gulpfile.js' , _.js + '/**/*.js'])
       .pipe($.jshint('.jshintrc'))
       .pipe($.jshint.reporter('jshint-stylish'));
+  });
+
+  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //| ✓ scsslint - scss files test
+  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  gulp.task('scsslint', function() {
+    return gulp.src([_.sass + '/**/*.{scss, sass}'])
+      .pipe($.scssLint({
+        'config': '.scsslintrc',
+        'customReport': $.scssLintStylish
+      }));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -154,7 +165,7 @@
   //| ✓ alias
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('start', ['watch']);
-  gulp.task('test',  ['jshint']);
+  gulp.task('test',  ['jshint', 'scsslint']);
   gulp.task('build', ['static', 'sass', 'clean'], function(){
     gulp.start(['html', 'image']);
   });

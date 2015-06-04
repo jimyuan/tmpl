@@ -1,6 +1,6 @@
 {
   "name": "bdc-site-template",
-  "version": "0.2.0",
+  "version": "0.6.4",
   "description": "This is a normal template for develop in big-data-cluster team.",
   "repository": {
     "type": "git",
