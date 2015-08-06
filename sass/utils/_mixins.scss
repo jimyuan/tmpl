@@ -1,0 +1,64 @@
+@charset 'utf-8';
+
+// Sizing shortcuts
+@mixin size($w, $h: $w) {
+  width: $w;
+  height: $h;
+}
+
+// clear float
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: ' '; 
+    display: table;
+  }
+  
+  &:after {
+    clear: both;
+  }
+}
+
+// Easy and quick CSS positioning
+@mixin position($position, $args) {
+  @each $o in top right bottom left {
+    $i: index($args, $o);
+    @if $i and 
+        $i + 1 <= length($args) and 
+        type-of(nth($args, $i + 1)) == number {
+      #{$o}: nth($args, $i + 1);
+    }
+  }
+  position: $position;
+}
+ 
+// Positioning helpers
+@mixin absolute($args: '') {
+  @include position(absolute, $args);
+}
+ 
+@mixin fixed($args: '') {
+  @include position(fixed, $args);
+}
+ 
+@mixin relative($args: '') {
+  @include position(relative, $args);
+}
+
+// Responsive manager.
+// @param {String} $breakpoint - Breakpoint
+// @requires $breakpoints
+@mixin respond-to($breakpoint) {
+  $raw-query: map-get($breakpoints, $breakpoint);
+
+  @if $raw-query {
+    $query: if(type-of($raw-query) == 'string', unquote($raw-query), inspect($raw-query));
+
+    @media screen and #{$query} {
+      @content;
+    }
+  } @else {
+    @error 'No value found for `#{$breakpoint}`. '
+         + 'Please make sure it is defined in `$breakpoints` map.';
+  }
+}

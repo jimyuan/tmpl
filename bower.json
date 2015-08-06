@@ -1,6 +1,6 @@
 {
   "name": "bdc-site-template",
-  "version": "0.6.4",
+  "version": "0.8.6",
   "description": "This is a normal template for develop in big-data-cluster team.",
   "repository": {
     "type": "git",
@@ -12,7 +12,6 @@
   ],
   "licenses": "MIT",
   "dependencies": {
-    "jquery": "~2.1.4",
-    "sandal": "https://github.com/marvin1023/sandal.git"
+    "jquery": "~2.1.4"
   }
 }

@@ -1,0 +1,219 @@
+@charset 'utf-8';
+
+html {
+  // font-size: 62.5%; // set base font-size to 10px (16px * 62.5), 1rem = 10px
+  font-size: 10px; // Firefox on Mac default font-size is 15px
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+  position: relative;
+  background: $base-background;
+  font-family: $font-sans;
+  font-size: $base-font-size;
+  color: $base-text-color;
+  font-weight: normal;
+  line-height: 1.6;
+}
+
+
+/**
+ * 1. http://usabilitypost.com/2012/11/15/w-optimizelegibility-on-mobile-devices/
+ * 2. http://maxvoltar.com/archive/-webkit-font-smoothing
+ * NOTE: http://usabilitypost.com/2012/11/05/stop-fixing-font-smoothing/
+ * 3. http://maximilianhoffmann.com/posts/better-font-rendering-on-osx
+ *    http://jaydenseric.com/blog/css-font-smoothing-for-firefox-mac
+ */
+
+body,
+input,
+textarea,
+select,
+button {
+  text-rendering: optimizeLegibility;  /* 1 */
+  -webkit-font-smoothing: antialiased; /* 2 */
+  -moz-osx-font-smoothing: grayscale;  /* 3 Default: auto */
+  font-feature-settings: 'liga', 'kern';
+}
+
+/*Only phones */
+
+@include respond-to(xs) {
+
+  /**
+   * Break strings if their length exceeds the width of their container
+   */
+  body {
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+}
+
+
+/**
+ * links
+ */
+
+a {
+  color: $base-color-link;
+
+  &:hover,
+  &:focus {
+    color: lighten($base-color-link, 10%);
+  }
+
+}
+
+/**
+ * Abbreviation and definition
+ */
+abbr[title],
+dfn[title] {
+  cursor: help;
+}
+
+dfn[title] {
+  border-bottom: 1px dotted;
+  font-style: normal;
+}
+
+
+/* Spacing for block elements */
+p,
+hr,
+ul,
+ol,
+dl,
+blockquote,
+pre,
+address,
+fieldset,
+figure {
+  margin: 0 0 $global-spacing;
+}
+
+* + p,
+* + hr,
+* + ul,
+* + ol,
+* + dl,
+* + blockquote,
+* + pre,
+* + address,
+* + fieldset,
+* + figure {
+  margin-top: $global-spacing;
+}
+
+
+
+/* Headings
+   ===================================================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 $global-spacing;
+}
+
+* + h1,
+* + h2,
+* + h3,
+* + h4,
+* + h5,
+* + h6 {
+  margin-top: $global-spacing;
+}
+
+
+// List
+// ========================================================================
+
+/* Ordered and unordered lists */
+ul,
+ol {
+  padding-left: 2em;
+}
+
+/* Reset margin for nested lists */
+ul > li > ul,
+ul > li > ol,
+ol > li > ol,
+ol > li > ul {
+  margin: $global-spacing / 2 0;
+}
+
+
+/* Description lists */
+dt {
+  font-weight: bold;
+
+  + dd {
+    margin-top: 0.5em;
+  }
+}
+
+dd {
+  margin-left: 0;
+
+  + dt {
+    margin-top: 1em;
+  }
+}
+
+
+/**
+ * Horizontal rule
+ * 1. Address differences between Firefox and other browsers.
+ */
+hr {
+  display: block;
+  padding: 0;
+  border: 0;
+  height: 0;
+  border-top: 1px solid #eee;
+  box-sizing: content-box; /* 1 */
+}
+
+
+/* Address */
+address {
+  font-style: normal;
+}
+
+
+/* Quotes */
+q,
+blockquote {
+  font-style: italic;
+}
+
+
+/* iframe */
+iframe {
+  border: 0;
+}
+
+
+
+/* Forms
+   ===================================================== */
+
+/**
+  * Vertical alignment
+  * Exclude `radio` and `checkbox` elements because the default `baseline` value aligns better with text
+  */
+button,
+input:not([type="radio"]):not([type="checkbox"]),
+select {
+  vertical-align: middle;
+}
+
+// add link info when print
+@media print {
+  a[href]:after {
+    content: ' (' attr(href) ')';
+  }
+}

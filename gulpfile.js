@@ -4,8 +4,8 @@
       _ = {
         app:  'app', 
         dist: 'dist', 
-        sass: 'app/sass',
-        tmpl: 'app/src',        
+        sass: 'sass',
+        tmpl: 'build',        
         js:   'app/js',
         css:  'app/css',
         img:  'app/img'
@@ -14,10 +14,24 @@
   function handleError(error){
     console.log(error.message);
     this.emit('end');
-  } 
+  }
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ jshint - js files test
+  //| ~ Wait for jekyll-build, then launch the Server
+  //|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  gulp.task('bs', ['sass', 'static'], function() {
+    $.browserSync({
+      ui: false,
+      server: {
+        baseDir: './'
+      },
+      startPath: './app',
+      port: 9000
+    });
+  });
+
+  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //| ~ jshint - js files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('jshint', function() {
     return gulp.src([ 'gulpfile.js' , _.js + '/**/*.js'])
@@ -26,7 +40,7 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ scsslint - scss files test
+  //| ~ scsslint - scss files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('scsslint', function() {
     return gulp.src([_.sass + '/**/*.{scss, sass}'])
@@ -37,15 +51,12 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ render template from html file
+  //| ~ render template from html file
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('static', function() {
-    return gulp.src([_.tmpl + '/*.html'])
+    return gulp.src([_.tmpl + '/partial/**/*.html'])
       .pipe($.plumber())
-      .pipe($.fileInclude({
-        prefix: '@@',
-        basepath: '@file'
-      }))
+      .pipe($.fileWrapper(_.tmpl + '/layout.html'))
       .pipe(gulp.dest(_.app + '/'))
       .pipe($.size({
         title: 'HTML files:'
@@ -53,35 +64,27 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ copy static files to dist files
-  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  // gulp.task('copy', function() {
-  //   return gulp.src(_.app + '/img/**/*')
-  //     .pipe(gulp.dest(_.dist + '/img/'))
-  //     .pipe($.size());
-  // });
-
-  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ sass2css (node-sass)
+  //| ~ sass2css (node-sass)
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('sass', function() {
-    return gulp.src(_.sass + '/**/*.{scss, sass}')
+    return gulp.src(_.sass + '/**/*.scss')
       .pipe($.plumber({ errorHandler: handleError}))
       .pipe($.sourcemaps.init())
       .pipe($.sass({
         outputStyle: 'expanded',
         includePaths: [ './bower_components/' ]
       }))
-      .pipe($.autoprefixer())
+      .pipe($.autoprefixer(['last 15 versions', '> 1%', 'ie 8']))
       .pipe($.sourcemaps.write('./'))
       .pipe(gulp.dest(_.css))
+      .pipe($.browserSync.reload({stream:true}))
       .pipe($.size({
         title: 'CSS files:'
       }));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ optimize images
+  //| ~ optimize images
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('image', function () {
     return gulp.src(_.img + '/**/*')
@@ -95,11 +98,11 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ join & minify css & js
+  //| ~ join & minify css & js
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('html', function() {
     return gulp.src(['app/*.html'])
-      .pipe($.plumber())
+      .pipe($.plumber({ errorHandler: handleError}))
       .pipe($.useref.assets())
       .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.minifyCss({
@@ -111,51 +114,24 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ connect
+  //| ~ watch
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('connect', function() {
-    $.connect.server({
-      root: ['./'],
-      livereload: true,
-      port: 9000
-    });
+  gulp.task('watch', function () {
+      // Watch scss files
+      gulp.watch(_.sass + '/**/*.scss', ['sass']);
+      // Watch template files
+      gulp.watch([_.tmpl + '/**/*.html'], ['static']);
+      gulp.watch([
+        _.js  + '/**/*.js',
+        _.app + '/*.html',
+        _.img + '/**/*.{png,jpg,jpeg,gif,ico}'
+      ], function(){
+        return $.browserSync.reload();
+      });
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ server
-  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('server', ['connect', 'sass', 'static'], function() {
-    $.shelljs.exec('open http://localhost:9000/app/');
-  });
-
-  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ watch
-  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('watch', ['server'], function() {
-    var wfs = [
-      _.app + '/*.html',
-      _.css + '/**/*.css',
-      _.img + '/**/*.{png,jpg,jpeg,gif,ico}',
-      _.js  + '/**/*.js'
-    ];
-    
-    $.watch(wfs, function(){
-      return gulp.src(wfs).pipe($.connect.reload());
-    });
-
-    // Watch style files
-    $.watch([_.sass + '/**/*.{sass,scss}'] , function() {
-      gulp.start('sass');
-    });
-
-    // Watch template files
-    $.watch([_.tmpl + '/**/*.html'], function() {
-      gulp.start('static');
-    });
-  });
-
-  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ✓ clean dist folder
+  //| ~ clean dist folder
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('clean', function() {
     return $.del([_.dist]);
@@ -164,14 +140,12 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ alias
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('start', ['watch']);
-  gulp.task('test',  ['jshint', 'scsslint']);
-  gulp.task('build', ['static', 'sass', 'clean'], function(){
-    gulp.start(['html', 'image']);
-  });
+  gulp.task('test',  ['scsslint', 'jshint']);
+  gulp.task('build', ['test', 'clean', 'image', 'html']);
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ default
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('default', ['build']);
+  gulp.task('default', ['bs', 'watch']);
+  
 }(require('gulp'), require('gulp-load-plugins')));

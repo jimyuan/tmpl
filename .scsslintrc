@@ -13,6 +13,9 @@ linters:
   ColorKeyword:
     enabled: false
 
+  ColorVariable:
+    enabled: false
+
   Comment:
     enabled: false
 
@@ -93,7 +96,7 @@ linters:
     extra_properties: []
 
   QualifyingElement:
-    enabled: true
+    enabled: false
     allow_element_with_attribute: false
     allow_element_with_class: false
     allow_element_with_id: false
@@ -115,7 +118,7 @@ linters:
     allow_single_line_rule_sets: false
 
   SingleLinePerSelector:
-    enabled: true
+    enabled: false
 
   SpaceAfterComma:
     enabled: true
