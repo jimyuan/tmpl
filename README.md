@@ -21,7 +21,7 @@
 ---
 
 ## SCSS 文件说明
-去除了之前采用的 [sandal](https://github.com/marvin1023/sandal) 框架，内建了以 normalize.css 为基础的自建基本样式。
+以 normalize 和 boostrap 的 scss 代码为基础，复制了它的 variables、和 reboot 的代码。
 
 ### 自建 minxins
 

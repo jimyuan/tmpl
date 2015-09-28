@@ -2,10 +2,10 @@
   'use strict';
   var $ = gulpLoadPlugins({pattern: '*', lazy: true}),
       _ = {
-        app:  'app', 
-        dist: 'dist', 
-        sass: 'sass',
-        tmpl: 'build',        
+        app:  'app',
+        dist: 'dist',
+        scss: 'scss',
+        tmpl: 'build',
         js:   'app/js',
         css:  'app/css',
         img:  'app/img'
@@ -17,9 +17,9 @@
   }
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ~ Wait for jekyll-build, then launch the Server
+  //| ~ Wait for scss build & html templates render, then launch the Server
   //|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('bs', ['sass', 'static'], function() {
+  gulp.task('bs', ['scss', 'static'], function() {
     $.browserSync({
       ui: false,
       server: {
@@ -43,7 +43,11 @@
   //| ~ scsslint - scss files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('scsslint', function() {
-    return gulp.src([_.sass + '/**/*.{scss, sass}'])
+    return gulp.src([
+      _.scss + '/**/*.scss',
+      '!' + _.scss + '/base/_normalize.scss',
+      '!' + _.scss + '/base/_reset.scss',
+      '!' + _.scss + '/utils/_variables.scss'])
       .pipe($.scssLint({
         'config': '.scsslintrc',
         'customReport': $.scssLintStylish
@@ -64,10 +68,10 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ~ sass2css (node-sass)
+  //| ~ scss2css (node-sass)
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('sass', function() {
-    return gulp.src(_.sass + '/**/*.scss')
+  gulp.task('scss', function() {
+    return gulp.src(_.sss + '/**/*.scss')
       .pipe($.plumber({ errorHandler: handleError}))
       .pipe($.sourcemaps.init())
       .pipe($.sass({
@@ -118,7 +122,7 @@
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('watch', function () {
       // Watch scss files
-      gulp.watch(_.sass + '/**/*.scss', ['sass']);
+      gulp.watch(_.scss + '/**/*.scss', ['scss']);
       // Watch template files
       gulp.watch([_.tmpl + '/**/*.html'], ['static']);
       gulp.watch([
@@ -147,5 +151,5 @@
   //| ✓ default
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('default', ['bs', 'watch']);
-  
+
 }(require('gulp'), require('gulp-load-plugins')));
