@@ -6,19 +6,6 @@
   height: $h;
 }
 
-// clear float
-@mixin clearfix() {
-  &:before,
-  &:after {
-    content: ' ';
-    display: table;
-  }
-
-  &:after {
-    clear: both;
-  }
-}
-
 // Easy and quick CSS positioning
 @mixin position($position, $args) {
   @each $o in top right bottom left {
@@ -65,7 +52,7 @@
 
 // clear float for children DOM
 @mixin clearfix() {
-  &::after {
+  &:after {
     content: '';
     display: table;
     clear: both;
