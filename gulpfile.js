@@ -1,6 +1,8 @@
 (function(gulp, gulpLoadPlugins) {
   'use strict';
-  var $ = gulpLoadPlugins({pattern: '*', lazy: true}),
+  var $ = gulpLoadPlugins({
+        pattern: ['*']
+      }),
       _ = {
         app:  'app',
         dist: 'dist',
@@ -15,12 +17,13 @@
     console.log(error.message);
     this.emit('end');
   }
+  //var stylish = require('jshint-stylish');
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ Wait for scss build & html templates render, then launch the Server
   //|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('bs', ['scss', 'static'], function() {
-    $.browserSync({
+    $.browserSync.init({
       ui: false,
       server: {
         baseDir: './'
@@ -33,26 +36,26 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ jshint - js files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('jshint', function() {
-    return gulp.src([ 'gulpfile.js' , _.js + '/**/*.js'])
-      .pipe($.jshint('.jshintrc'))
-      .pipe($.jshint.reporter('jshint-stylish'));
-  });
+  // gulp.task('jshint', function() {
+  //   return gulp.src([ 'gulpfile.js' , _.js + '/**/*.js'])
+  //     .pipe($.jshint())
+  //     .pipe($.jshint.reporter($.jshintStylish));
+  // });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ scsslint - scss files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('scsslint', function() {
-    return gulp.src([
-      _.scss + '/**/*.scss',
-      '!' + _.scss + '/base/_normalize.scss',
-      '!' + _.scss + '/base/_reset.scss',
-      '!' + _.scss + '/utils/_variables.scss'])
-      .pipe($.scssLint({
-        'config': '.scsslintrc',
-        'customReport': $.scssLintStylish
-      }));
-  });
+  // gulp.task('scsslint', function() {
+  //   return gulp.src([
+  //     _.scss + '/**/*.scss',
+  //     '!' + _.scss + '/base/_normalize.scss',
+  //     '!' + _.scss + '/base/_reset.scss',
+  //     '!' + _.scss + '/utils/_variables.scss'])
+  //     .pipe($.scssLint({
+  //       'config': '.scsslintrc',
+  //       'customReport': $.scssLintStylish
+  //     }));
+  // });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ render template from html file
@@ -71,17 +74,18 @@
   //| ~ scss2css (node-sass)
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('scss', function() {
-    return gulp.src(_.sss + '/**/*.scss')
+    return gulp.src(_.scss + '/**/*.scss')
       .pipe($.plumber({ errorHandler: handleError}))
       .pipe($.sourcemaps.init())
       .pipe($.sass({
-        outputStyle: 'expanded',
-        includePaths: [ './bower_components/' ]
-      }))
-      .pipe($.autoprefixer(['last 15 versions', '> 1%', 'ie 8']))
+        outputStyle: 'expanded'
+      }).on('error', $.sass.logError))
+      .pipe($.autoprefixer({
+         browsers: ['last 15 versions', '> 1%']
+       }))
       .pipe($.sourcemaps.write('./'))
       .pipe(gulp.dest(_.css))
-      .pipe($.browserSync.reload({stream:true}))
+      .pipe($.browserSync.stream())
       .pipe($.size({
         title: 'CSS files:'
       }));
@@ -107,13 +111,11 @@
   gulp.task('html', function() {
     return gulp.src(['app/*.html'])
       .pipe($.plumber({ errorHandler: handleError}))
-      .pipe($.useref.assets())
+      .pipe($.useref())
       .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.minifyCss({
         keepSpecialComments: 0
       })))
-      .pipe($.useref.restore())
-      .pipe($.useref())
       .pipe(gulp.dest(_.dist));
   });
 
@@ -129,9 +131,7 @@
         _.js  + '/**/*.js',
         _.app + '/*.html',
         _.img + '/**/*.{png,jpg,jpeg,gif,ico}'
-      ], function(){
-        return $.browserSync.reload();
-      });
+      ]).on('change', $.browserSync.reload);
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,8 +144,8 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ alias
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('test',  ['scsslint', 'jshint']);
-  gulp.task('build', ['test', 'clean', 'image', 'html']);
+  //gulp.task('test',  ['jshint', 'scsslint']);
+  gulp.task('build', ['clean', 'image', 'html']);
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ default
