@@ -1,7 +1,8 @@
 (function(gulp, gulpLoadPlugins) {
   'use strict';
   var $ = gulpLoadPlugins({
-        pattern: ['*']
+        pattern: ['*'],
+         rename: { 'jshint': 'Jshint'}
       }),
       _ = {
         app:  'app',
@@ -13,21 +14,13 @@
         img:  'app/img'
       };
 
-  function handleError(error){
-    console.log(error.message);
-    this.emit('end');
-  }
-  //var stylish = require('jshint-stylish');
-
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ Wait for scss build & html templates render, then launch the Server
   //|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('bs', ['scss', 'static'], function() {
     $.browserSync.init({
       ui: false,
-      server: {
-        baseDir: './'
-      },
+      server: { baseDir: './' },
       startPath: './app',
       port: 9000
     });
@@ -36,26 +29,24 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ jshint - js files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  // gulp.task('jshint', function() {
-  //   return gulp.src([ 'gulpfile.js' , _.js + '/**/*.js'])
-  //     .pipe($.jshint())
-  //     .pipe($.jshint.reporter($.jshintStylish));
-  // });
+  gulp.task('jshint', function() {
+    return gulp.src([ 'gulpfile.js',  _.js + '/**/*.js'])
+      .pipe($.jshint())
+      .pipe($.jshint.reporter($.jshintStylish));
+  });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ scsslint - scss files test
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  // gulp.task('scsslint', function() {
-  //   return gulp.src([
-  //     _.scss + '/**/*.scss',
-  //     '!' + _.scss + '/base/_normalize.scss',
-  //     '!' + _.scss + '/base/_reset.scss',
-  //     '!' + _.scss + '/utils/_variables.scss'])
-  //     .pipe($.scssLint({
-  //       'config': '.scsslintrc',
-  //       'customReport': $.scssLintStylish
-  //     }));
-  // });
+  gulp.task('scsslint', function() {
+    return gulp.src([
+      _.scss + '/**/*.scss',
+      '!' + _.scss + '/utils/*.scss'])
+      .pipe($.scssLint({
+        'config': '.scsslintrc',
+        'customReport': $.scssLintStylish
+      }));
+  });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ render template from html file
@@ -71,11 +62,11 @@
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //| ~ scss2css (node-sass)
+  //| ~ scss2css (use node-sass)
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('scss', function() {
     return gulp.src(_.scss + '/**/*.scss')
-      .pipe($.plumber({ errorHandler: handleError}))
+      .pipe($.plumber())
       .pipe($.sourcemaps.init())
       .pipe($.sass({
         outputStyle: 'expanded'
@@ -94,7 +85,7 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ optimize images
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('image', function () {
+  gulp.task('image', ['clean'], function () {
     return gulp.src(_.img + '/**/*')
       .pipe($.imagemin({
         progressive: true
@@ -108,15 +99,28 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ join & minify css & js
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('html', function() {
-    return gulp.src(['app/*.html'])
-      .pipe($.plumber({ errorHandler: handleError}))
+  gulp.task('html', ['clean'], function() {
+    return gulp.src(_.app + '/*.html')
+      .pipe($.plumber())
       .pipe($.useref())
       .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.minifyCss({
         keepSpecialComments: 0
       })))
       .pipe(gulp.dest(_.dist));
+  });
+
+  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //| ~ zip dist files with time stamp
+  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  gulp.task('zip', function() {
+    return gulp.src(_.dist + '/**/*')
+      .pipe($.plumber())
+      .pipe($.zip('archive_' + (+new Date()) + '.zip'))
+      .pipe(gulp.dest('./'))
+      .pipe($.size({
+        title: 'ZIP file:'
+      }));
   });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,8 +148,8 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ alias
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  //gulp.task('test',  ['jshint', 'scsslint']);
-  gulp.task('build', ['clean', 'image', 'html']);
+  // gulp.task('test',  ['jshint', 'scsslint']);
+  gulp.task('build', ['image', 'html']);
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ default

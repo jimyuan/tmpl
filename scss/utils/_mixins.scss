@@ -35,13 +35,17 @@
 // Responsive manager.
 // @param {String} $breakpoint - Breakpoint
 // @requires $breakpoints
-@mixin respond-to($grid-breakpoints) {
-  $raw-query: map-get($grid-breakpoints, $breakpoint);
+@mixin respond-to($breakpoint) {
+  $raw-query: map-get($breakpoints, $breakpoint);
 
   @if $raw-query {
-    $query: if(type-of($raw-query) == 'string', unquote($raw-query), inspect($raw-query));
+    $query: if(
+      type-of($raw-query) == 'string',
+      unquote($raw-query),
+      inspect($raw-query)
+    );
 
-    @media screen and #{$query} {
+    @media #{$query} {
       @content;
     }
   } @else {
@@ -57,29 +61,4 @@
     display: table;
     clear: both;
   }
-}
-
-@mixin hover-focus {
-  @if $enable-hover-media-query {
-    &:focus {
-      @content;
-    }
-
-    @include hover {
-      @content;
-    }
-  } @else {
-    &:focus,
-    &:hover {
-      @content;
-    }
-  }
-}
-
-@mixin tab-focus() {
-  // Default
-  outline: thin dotted;
-  // WebKit
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
 }

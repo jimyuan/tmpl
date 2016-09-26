@@ -2,6 +2,7 @@
 .sass-cache
 css
 dist
+*.zip
 app/*.html
 node_modules
 bower_components

@@ -6,12 +6,17 @@
     "type": "git",
     "url": "https://github.com/jimyuan/tmpl.git"
   },
-  "keywords": ["gulp", "sass", "static"],
+  "keywords": [
+    "gulp",
+    "sass",
+    "static"
+  ],
   "authors": [
     "Jim Yuan <aquarior@gmail.com>"
   ],
   "licenses": "MIT",
   "dependencies": {
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "bootstrap": "v4.0.0-alpha.4"
   }
 }
