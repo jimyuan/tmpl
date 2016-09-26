@@ -34,22 +34,26 @@ gulp
 
 ### 自建 minxins
 
-`size(width, height)` | 方便的宽高设定，如只传一个参数，则长宽一样
-`clearfix` | 清除浮动
-`absolute(argu)` | 绝对定位，按需传入定位参数即可，eg: `@include absolute(top 0 right 0)`
-`fixed(argu)` | 固定定位，同上
-`relative(argu)` | 相对定位，同上
-`respond-to(argu)` | 响应式断点设置，断点设置见 `_variables.scss`
+| Mixins | 说明 |
+| --- | --- |
+| `size(width, height)` | 方便的宽高设定，如只传一个参数，则长宽一样 |
+| `clearfix` | 清除浮动|
+| `absolute(argu)` | 绝对定位，按需传入定位参数即可，eg: `@include absolute(top 0 right 0)`|
+| `fixed(argu)` | 固定定位，同上|
+| `relative(argu)` | 相对定位，同上|
+| `respond-to(argu)` | 响应式断点设置，断点设置见 `_variables.scss`|
 
 ### 自建 functions
 以下是一些 SCSS 目前还不支持的数学运算：
 
-* `pow(number, exp)`—— 乘方
-* `fact(number)`    —— 阶乘
-* `rad(angle)`      —— 角度转弧度
-* `sin(angle)`      —— 正弦
-* `cos(angle)`      —— 余弦
-* `tan(angle)`      —— 正切
+| 函数 | 说明 |
+| --- | --- |
+| `pow(number, exp)`| 乘方 |
+| `fact(number)`    | 阶乘 |
+| `rad(angle)`      | 角度转弧度 |
+| `sin(angle)`      | 正弦 |
+| `cos(angle)`      | 余弦 |
+| `tan(angle)`      | 正切 |
 
 以上 function 依项目需求而定，可不引入。在 docs.scss 中取消 import 即可。
 
