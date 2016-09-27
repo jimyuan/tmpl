@@ -22,7 +22,24 @@
       ui: false,
       server: { baseDir: './' },
       startPath: './app',
-      port: 9000
+      port: 9000,
+      notify: {
+        styles: [
+          'display: none',
+          'padding: 15px',
+          'font-family: sans-serif',
+          'position: fixed',
+          'font-size: 0.9em',
+          'z-index: 9999',
+          'bottom: 0px',
+          'right: 0px',
+          'border-top-left-radius: 5px',
+          'background-color: rgba(0,0,0,0.4)',
+          'margin: 0',
+          'color: white',
+          'text-align: center'
+        ]
+      }
     });
   });
 
@@ -99,7 +116,7 @@
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ join & minify css & js
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('html', ['clean'], function() {
+  gulp.task('assets', ['clean'], function() {
     return gulp.src(_.app + '/*.html')
       .pipe($.plumber())
       .pipe($.useref())
@@ -109,6 +126,19 @@
       })))
       .pipe(gulp.dest(_.dist));
   });
+
+  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //| ~ minify html files
+  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  gulp.task('minify', ['assets'], function() {
+    return gulp.src(_.dist + '/*.html')
+      .pipe($.plumber())
+      .pipe($.htmlmin({
+        removeComments: true,
+        collapseWhitespace: true
+      }))
+      .pipe(gulp.dest(_.dist));
+  })
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ zip dist files with time stamp
@@ -149,7 +179,7 @@
   //| ✓ alias
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   // gulp.task('test',  ['jshint', 'scsslint']);
-  gulp.task('build', ['image', 'html']);
+  gulp.task('build', ['image', 'minify']);
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ✓ default
