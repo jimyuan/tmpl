@@ -1,45 +1,47 @@
 (function(gulp, gulpLoadPlugins) {
   'use strict';
-  var $ = gulpLoadPlugins({
+  var $, _, notifyStyle;
+
+  // gulp autoload plugins
+  $ = gulpLoadPlugins({
         pattern: ['*'],
          rename: { 'jshint': 'Jshint'}
-      }),
-      _ = {
-        app:  'app',
-        dist: 'dist',
-        scss: 'scss',
-        tmpl: 'build',
-        js:   'app/js',
-        css:  'app/css',
-        img:  'app/img'
-      };
+      });
+
+  // path setting
+  _ = {
+    app:  'app',      dist: 'dist',
+    js:   'app/js',   css:  'app/css',    img:  'app/img',
+    scss: 'src/scss', tmpl: 'src/pages',  es6:  'src/es6'
+  };
+
+  // BrowserSync notify style
+  notifyStyle = [
+    'display: none',
+    'padding: 15px',
+    'font-family: sans-serif',
+    'position: fixed',
+    'font-size: 0.9em',
+    'z-index: 9999',
+    'bottom: 0px',
+    'right: 0px',
+    'border-top-left-radius: 5px',
+    'background-color: rgba(0,0,0,0.4)',
+    'margin: 0',
+    'color: white',
+    'text-align: center'
+  ];
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ Wait for scss build & html templates render, then launch the Server
   //|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  gulp.task('bs', ['scss', 'static'], function() {
+  gulp.task('bs', ['scss', 'es6', 'static'], function() {
     $.browserSync.init({
       ui: false,
       server: { baseDir: './' },
       startPath: './app',
       port: 9000,
-      notify: {
-        styles: [
-          'display: none',
-          'padding: 15px',
-          'font-family: sans-serif',
-          'position: fixed',
-          'font-size: 0.9em',
-          'z-index: 9999',
-          'bottom: 0px',
-          'right: 0px',
-          'border-top-left-radius: 5px',
-          'background-color: rgba(0,0,0,0.4)',
-          'margin: 0',
-          'color: white',
-          'text-align: center'
-        ]
-      }
+      notify: { styles: notifyStyle}
     });
   });
 
@@ -57,8 +59,8 @@
   //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   gulp.task('scsslint', function() {
     return gulp.src([
-      _.scss + '/**/*.scss',
-      '!' + _.scss + '/utils/*.scss'])
+      _.scss + '/**/*.scss', '!' + _.scss + '/utils/*.scss'
+      ])
       .pipe($.scssLint({
         'config': '.scsslintrc',
         'customReport': $.scssLintStylish
@@ -96,6 +98,22 @@
       .pipe($.browserSync.stream())
       .pipe($.size({
         title: 'CSS files:'
+      }));
+  });
+
+  //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //| ~ es6 => es5 (use present-es2015)
+  //'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  gulp.task('es6', function() {
+    return gulp.src(_.es6 + '/**/*.js')
+      .pipe($.sourcemaps.init())
+      .pipe($.babel({
+          presets: ['es2015']
+      }))
+      .pipe($.sourcemaps.write('./'))
+      .pipe(gulp.dest(_.js))
+      .pipe($.size({
+        title: 'JS files:'
       }));
   });
 
@@ -138,7 +156,7 @@
         collapseWhitespace: true
       }))
       .pipe(gulp.dest(_.dist));
-  })
+  });
 
   //|**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //| ~ zip dist files with time stamp
@@ -159,6 +177,8 @@
   gulp.task('watch', function () {
       // Watch scss files
       gulp.watch(_.scss + '/**/*.scss', ['scss']);
+      // Watch es6 files
+      gulp.watch(_.es6 + '/**/*.js', ['es6']);
       // Watch template files
       gulp.watch([_.tmpl + '/**/*.html'], ['static']);
       gulp.watch([

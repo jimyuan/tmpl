@@ -28,10 +28,13 @@ gulp
 如果是手机网站，在浏览器模拟器中，可以从地址 `http://localhost:9000/`进入，项目跟目录下的页面模拟了iOS safari浏览器的状态栏、地址栏和工具栏，是你能够更加清楚的知道网页在浏览器中的页面尺寸。
 
 ## HTML 文件生成
-本项目采用 gulp-file-wrapper 插件，所有静态 HTML 都从 `build/layout.html` 这个模板中生成，通过 watch 进程查看 `build/partial/` 目录中的代码并实时编译成完整文件存放到 `app` 目录中。
+本项目采用 gulp-file-wrapper 插件，所有静态 HTML 都从 `src/pages/layout.html` 这个模板中生成，通过 watch 进程查看 `src/pages/partial/` 目录中的代码并实时编译成完整文件存放到 `app` 目录中。
 
 ## SCSS 文件说明
-以 boostrap v4 alpha 4 版本为基础做了 reboot。 今后会针对 BS 主项目的升级而进行微调。
+以 boostrap v4 alpha 4 版本为基础做了 reboot。 今后会针对 BS 主项目的升级而进行微调。通过 gulp task 实时编译 css 文件到 `app/css/` 目录下。
+
+## JS 文件说明
+已全面支持 ES6 语法，通过 gulp task 实时编译成 ES5 代码，然后存放到 `app/js/` 下。。
 
 ### 自建 minxins
 
@@ -61,10 +64,9 @@ gulp
 ## 测试说明
 
 ### JS 测试
-已在 gulpfile.js 中 配置了 task。在命令行中执行 `gulp jshint` 即可进行 JS 语法测试。
-```
-gulp jshint
-```
+~~已在 gulpfile.js 中 配置了 task。在命令行中执行 `gulp jshint` 即可进行 JS 语法测试。~~
+
+现已通过 eslint 来对 es6 代码进行同步测试，不用 gulp task 了。
 
 ### SCSS 测试
 已在 gulpfile.js 中 配置了 task。在命令行中执行 `gulp scsslint` 即可进行 SCSS 语法测试。
