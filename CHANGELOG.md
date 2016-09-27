@@ -1,5 +1,16 @@
 # CHANGE LOG
 
+## 2016-09-27
+众多更新，版本号升级为 _2.0.0_
+
+- scss 采用 BS4 alpha 4 的 reboot
+- 使用 es2015 来编写 js，添加新 task 实时编译成 ES5
+- gulpfile.js 也采用 es2015 编写，保留 ES5 版本以防万一（gulpfile_es5.js）
+- 调整目录结构，src 目录用于存放css，js 和 html 的预编译源码
+
+## 2016-09-22
+升级项目内的 npm 包，升级后，某些依赖包的 API 发生变化，重写 gulpfile.js。
+
 ## 2015-09-28
 scss 框架更改，reset 样式的代码从 Bootstrap 4 中挖过来占为己有，同时提升版本号：_0.9.0_
 

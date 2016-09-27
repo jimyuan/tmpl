@@ -1,7 +1,7 @@
 {
   "name": "bdc-site-template",
-  "version": "0.9.0",
-  "description": "This is a normal template for develop in big-data-cluster team.",
+  "version": "2.0.0",
+  "description": "This is a normal template for develop team. Use scss & es6.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jimyuan/tmpl.git"

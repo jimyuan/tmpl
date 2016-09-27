@@ -32,7 +32,7 @@
   "rules": {
     "strict": [0, "global"],
     "no-var": 2,
-    "prefer-const": 2,
+    "prefer-const": 0,
     "no-const-assign": 2,
     "constructor-super": 2,
     "prefer-arrow-callback": 0,
@@ -151,7 +151,7 @@
     "no-trailing-spaces": 2,
     "no-extra-parens": [2, "functions"],
     "no-underscore-dangle": 0,
-    "one-var": [2, "never"],
+    "one-var": [2, "always"],
     "padded-blocks": [2, "never"],
     "semi": [2, "never"],
     "semi-spacing": [2, {
