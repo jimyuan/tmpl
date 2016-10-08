@@ -120,9 +120,7 @@
       .pipe($.plumber())
       .pipe($.useref())
       .pipe($.if('*.js', $.uglify()))
-      .pipe($.if('*.css', $.minifyCss({
-        keepSpecialComments: 0
-      })))
+      .pipe($.if('*.css', $.cleanCss()))
       .pipe(gulp.dest(_.dist))
   })
 
