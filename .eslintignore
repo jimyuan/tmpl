@@ -1,2 +1,4 @@
 node_modules/**
+app/**
+dist/**
 gulpfile_es5.js
