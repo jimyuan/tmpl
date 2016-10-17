@@ -60,9 +60,12 @@
 
   /* render template from html file */
   gulp.task('static', () => {
-    return gulp.src(`${_.tmpl}/partial/**/*.html`)
+    return gulp.src(`${_.tmpl}/*.html`)
       .pipe($.plumber())
-      .pipe($.fileWrapper(`${_.tmpl}/layout.html`))
+      .pipe($.fileInclude({
+        prefix: '@@',
+        basepath: '@file'
+      }))
       .pipe(gulp.dest(`${_.app}/`))
       .pipe($.size({
         title: 'HTML files:'
