@@ -32,7 +32,7 @@
   ]
 
   /* launch the Server */
-  gulp.task('bs', ['scss', 'es6', 'static'], () => {
+  gulp.task('bs', ['scss', 'es6', 'html'], () => {
     $.browserSync.init({
       ui: false,
       server: { baseDir: './' },
@@ -59,7 +59,7 @@
   })
 
   /* render template from html file */
-  gulp.task('static', () => {
+  gulp.task('html', () => {
     return gulp.src(`${_.tmpl}/*.html`)
       .pipe($.plumber())
       .pipe($.fileInclude({
@@ -156,7 +156,7 @@
     // Watch es6 files
     gulp.watch(`${_.es6}/**/*.js`, ['es6'])
     // Watch template files
-    gulp.watch(`${_.tmpl}/**/*.html`, ['static'])
+    gulp.watch(`${_.tmpl}/**/*.html`, ['html'])
     gulp.watch([
       `${_.js}/**/*.js`,
       `${_.app}/*.html`,

@@ -1,5 +1,10 @@
 # CHANGE LOG
 
+## 2016-10-17
+- 改用 gulp-file-include 来生成静态页面。
+- 将 gulp-minify-css 替换为 gulp-clean-css。
+- 修改 .eslint 文件，使其适应于 jQuery 的语法检测。
+
 ## 2016-09-27
 众多更新，版本号升级为 _2.0.0_
 

@@ -1,6 +1,6 @@
 {
-  "name": "bdc-site-template",
-  "version": "2.0.0",
+  "name": "normal-tmpl",
+  "version": "2.3.0",
   "description": "This is a normal template for develop team. Use scss & es6.",
   "repository": {
     "type": "git",
