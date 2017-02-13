@@ -1,6 +1,6 @@
 {
   "name": "normal-tmpl",
-  "version": "2.3.0",
+  "version": "2.3.5",
   "description": "This is a normal template for develop team. Use scss & es6.",
   "repository": {
     "type": "git",
@@ -17,6 +17,6 @@
   "licenses": "MIT",
   "dependencies": {
     "jquery": "~3.1.0",
-    "bootstrap": "v4.0.0-alpha.5"
+    "bootstrap": "v4.0.0-alpha.6"
   }
 }
