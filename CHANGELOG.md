@@ -3,8 +3,9 @@
 ## 2017-02-13
 - 进一步优化 gulp 文件，精简 task 数量。
 - 升级了一系列 npm 包的版本，特别是 gulp-sass 的版本，避免了 node-sass 不兼容当前 node 版本的问题(v7.4.0)
-- 排查了之前项目打包会产生 MaxListenersExceededWarning 的情况，屏蔽了 gulp-imagemin 产生该 warning 的报错信息（[详情](https://github.com/sindresorhus/gulp-imagemin/issues/237)）。
+- 排查了之前项目打包会产生 MaxListenersExceededWarning 的情况，屏蔽了 gulp-imagemin 产生该 warning 的报错信息（[详情](https://github.com/sindresorhus/gulp-imagemin/issues/237)）
 - 修改了 gulp-sass 任务中默认 sass 路径的配置错误
+- 引入 gulp-sequence，定制 gulp task 的执行顺序
 - 提升版本号为 _2.3.5_
 
 ## 2017-01-06

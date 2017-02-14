@@ -108,7 +108,7 @@
    打包任务
   */
   /* images 优化 */
-  gulp.task('image', ['clean'], () => gulp
+  gulp.task('image', () => gulp
     .src(`${_.img}/**/*`)
     .pipe($.imagemin([
       $.imagemin.gifsicle(),
@@ -120,7 +120,7 @@
   )
 
   /* 分离 HTML 中需要要再处理的 JS 和 CSS 文件，并按设置合并 */
-  gulp.task('assets', ['clean'], () => gulp
+  gulp.task('assets', () => gulp
     .src(`${_.app}/*.html`)
     .pipe($.plumber())
     .pipe($.useref())
@@ -128,7 +128,7 @@
   )
 
   /* HTML 文件压缩 */
-  gulp.task('html-minify', ['assets'], () => gulp
+  gulp.task('html-minify', () => gulp
     .src(`${_.dist}/*.html`)
     .pipe($.plumber())
     .pipe($.htmlmin({
@@ -139,7 +139,7 @@
   )
 
   /*  js 文件混淆及压缩 */
-  gulp.task('js-minify', ['assets'], () => gulp
+  gulp.task('js-minify', () => gulp
     .src(`${_.dist}/js/*.js`)
     .pipe($.plumber())
     .pipe($.uglify())
@@ -147,15 +147,12 @@
   )
 
   /*  CSS 文件压缩 */
-  gulp.task('css-minify', ['assets'], () => gulp
+  gulp.task('css-minify', () => gulp
     .src(`${_.dist}/css/*.css`)
     .pipe($.plumber())
     .pipe($.cleanCss())
     .pipe(gulp.dest(`${_.dist}/css`))
   )
-
-  /* 资源打包处理最后一步 */
-  // gulp.task('assets-minify', ['html-minify', 'js-minify', 'css-minify'])
 
   /* 将 build 好的文件压缩成 zip 文件，并打上时间戳 */
   gulp.task('zip', () => gulp
@@ -184,10 +181,12 @@
   /*  dist 目录清除 */
   gulp.task('clean', () => $.del([_.dist]))
 
-  /* 任务定制 */
-  gulp.task('init', taskInit)
-  gulp.task('build', ['image', 'html-minify', 'js-minify', 'css-minify'])
+  /* 发布任务定制 */
+  gulp.task('build', $.sequence(
+    taskInit, 'clean', 'assets',
+    ['image', 'html-minify', 'js-minify', 'css-minify'])
+  )
 
-  /* 默认任务 */
+  /* 默认任务，运行项目 */
   gulp.task('default', ['bs', 'watch'])
 }(require('gulp'), require('gulp-load-plugins')))
