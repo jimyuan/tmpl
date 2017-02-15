@@ -98,7 +98,8 @@
     .src(`${_.es6}/**/*.es6`)
     .pipe($.sourcemaps.init())
     .pipe($.babel({
-      presets: ['es2015', 'stage-2']
+      presets: ['es2015', 'stage-2'],
+      plugins: ['transform-runtime']
     }))
     .pipe($.sourcemaps.write('./'))
     .pipe(gulp.dest(_.js))
@@ -165,17 +166,18 @@
   /* watch task */
   gulp.task('watch', () => {
     // Watch scss files
-    gulp.watch(`${_.scss}/**/*.scss`, ['scss'])
+    $.watch(`${_.scss}/**/*.scss`, { ignoreInitial: false }, () => gulp.start('scss'))
     // Watch es6 files
-    gulp.watch(`${_.es6}/**/*.es6`, ['es6'])
+    $.watch(`${_.es6}/**/*.es6`,   { ignoreInitial: false }, () => gulp.start('es6'))
     // Watch template files
-    gulp.watch(`${_.tmpl}/**/*.html`, ['html'])
+    $.watch(`${_.tmpl}/**/*.html`, { ignoreInitial: false }, () => gulp.start('html'))
+
     // Watch for reload
-    gulp.watch([
+    $.watch([
       `${_.js}/**/*.js`,
       `${_.app}/*.html`,
       `${_.img}/**/*.{png,jpg,jpeg,gif,ico}`
-    ]).on('change', $.browserSync.reload)
+    ], $.browserSync.reload)
   })
 
   /*  dist 目录清除 */
