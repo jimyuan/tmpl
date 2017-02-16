@@ -17,6 +17,7 @@
   "licenses": "MIT",
   "dependencies": {
     "jquery": "~3.1.0",
-    "bootstrap": "v4.0.0-alpha.6"
+    "bootstrap": "v4.0.0-alpha.6",
+    "artTemplate": "^3.0.1"
   }
 }

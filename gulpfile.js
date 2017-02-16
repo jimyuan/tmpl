@@ -98,8 +98,7 @@
     .src(`${_.es6}/**/*.es6`)
     .pipe($.sourcemaps.init())
     .pipe($.babel({
-      presets: ['es2015', 'stage-2'],
-      plugins: ['transform-runtime']
+      presets: ['es2015', 'stage-2']
     }))
     .pipe($.sourcemaps.write('./'))
     .pipe(gulp.dest(_.js))
