@@ -5,6 +5,6 @@
   const {demo, pageRender} = window.sso
   demo.fetch()
     .then(data => {
-      pageRender('demo', data)
+      pageRender('demo', data.data)
     })
 })()

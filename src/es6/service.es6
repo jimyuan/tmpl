@@ -7,7 +7,7 @@
   // 演示请求块
   class DemoService {
     fetch() {
-      return xhr('/start')
+      return xhr('/info')
     }
   }
 
