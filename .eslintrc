@@ -157,7 +157,6 @@
     "no-trailing-spaces": 2,
     "no-extra-parens": [2, "functions"],
     "no-underscore-dangle": 0,
-    "one-var": [2, "always"],
     "padded-blocks": [2, "never"],
     "semi": [2, "never"],
     "semi-spacing": [2, {

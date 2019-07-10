@@ -2,21 +2,21 @@
 申明：本开发模板适用于小型快速简单网站开发，非用于大型或者模块化开发之使用。
 
 ## 开发环境
-采用 Nodejs 为基础的 gulp 搭建前端自动化模块，并利用 bower 工具对前端库进行管理，如果从未安装过这两个工具，通过以下命令全局安装：
+采用 Nodejs 为基础的 gulp 搭建前端自动化模块，并利用 npm 工具对前端库进行管理。通过以下命令全局安装 gulp：
 ```
-npm install -g gulp bower
+npm install -g gulp-cli
 ```
 
 ## 安装依赖包
-将代码 clone 下来后，首次运行之前，需要需安装项目依赖包。通过以下命令，我们将开发环境的自动化工具以及网站所需要的一些第三方框架都初始化好。这些初始的包和框架列表写在 `package.json` 同 `bower.json` 的内容里。
+将代码 clone 下来后，首次运行之前，需要需安装项目依赖包。通过以下命令，我们将开发环境的自动化工具以及网站所需要的一些第三方框架都初始化好。这些初始的包和框架列表写在 `package.json` 中。
 ```
-npm install && bower install
+npm install
 ```
 
-在开发过程中，如果需要其他的第三方前端框架，需要通过以下命令来安装并引用：
+在开发过程中，如果需要其他的第三方前端框架，也通过以下命令来安装并引用：
 ```
-npm install --save-dev package_name
-bower install --save framework_name
+npm install -D package_name
+npm install -S package_name
 ```
 
 ## 项目启动
@@ -31,10 +31,10 @@ gulp
 本项目采用 gulp-file-include 插件，静态 HTML 代码将通过 include 标记插入到指定的 html 文件中，然后生成完整 html 文件转移到 `app` 目录中。
 
 ## SCSS 文件说明
-以 boostrap v4 alpha 4 版本为基础做了 reboot。 今后会针对 BS 主项目的升级而进行微调。通过 gulp task 实时编译 css 文件到 `app/css/` 目录下。
+通过 gulp 任务实时编译 css 文件到 `app/css/` 目录下。
 
 ## JS 文件说明
-已全面支持 ES6 语法，通过 gulp task 实时编译成 ES5 代码，然后存放到 `app/js/` 下。。
+已全面支持 ES6 语法，通过 gulp 任务实时编译成 ES5 代码，然后存放到 `app/js/` 下。
 
 ### 自建 minxins
 

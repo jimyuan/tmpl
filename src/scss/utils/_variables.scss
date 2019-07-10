@@ -1,9 +1,1 @@
 @charset 'utf-8';
-
-// 简易断点管理器，断点数据继承自 bs4 alpha
-$breakpoints: (
-  'sm': (min-width: map-get($grid-breakpoints, sm)),
-  'md': (min-width: map-get($grid-breakpoints, md)),
-  'lg': (min-width: map-get($grid-breakpoints, lg)),
-  'xl': (min-width: map-get($grid-breakpoints, xl))
-);
