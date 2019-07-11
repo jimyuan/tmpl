@@ -170,7 +170,7 @@ task('clean', () => del([_.dist]))
 /**
  * Run a server and open project
  */
-task('start', series('scss', 'es6', 'html', () => {
+task('run-proj', () => {
   browserSync.init({
     ui: false,
     server: { baseDir: './' },
@@ -178,7 +178,11 @@ task('start', series('scss', 'es6', 'html', () => {
     port: 9000,
     notify: { styles }
   })
-}))
+})
+/**
+ * Start the proje (main task)
+ */
+task('start', series('scss', 'es6', 'html', 'run-proj'))
 
 exports.default = parallel('start', 'watch')
 /**
