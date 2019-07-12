@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  height: 100%;
+}
+
+h1 {
+  margin: 0;
+}

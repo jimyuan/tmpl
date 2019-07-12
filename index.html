@@ -44,7 +44,7 @@
       display: block;
       height: 20px;
     }
-    
+
     nav {
       display: block;
       height: 44px;
@@ -60,7 +60,7 @@
       outline: none;
       line-height: 29px;
       font-size: 14px;
-    
+
     }
 
     iframe {
@@ -74,7 +74,7 @@
       height: 44px;
       box-shadow: 0 -1px 0 0 rgba(166, 166, 166, 0.5);
     }
-    
+
   </style>
 </head>
 <body>
@@ -106,7 +106,7 @@
 
       var loopURL = setInterval(function(){
         u.value = i.contentWindow.location.href;
-      }, 100);
+      }, 1000 / 66);
 
       u.addEventListener('blur', function(){
         if(i.contentWindow.location.href !== u.value) {

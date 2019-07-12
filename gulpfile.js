@@ -27,7 +27,8 @@ const [ scssLint, scssLintStylish, fileInclude, sourcemaps, sass, autoprefixer, 
 const _ = {
   app: 'app', dist: 'dist',
   js: 'app/js', css: 'app/css', img: 'app/img',
-  scss: 'src/scss', tmpl: 'src/pages',  es6: 'src/es6'
+  scss: 'src/scss', tmpl: 'src/pages', es6: 'src/es6',
+  assets: 'src/assets'
 }
 /**
  * BrowserSync notify style
@@ -73,8 +74,7 @@ task('scss', () => src(`${_.scss}/**/*.scss`)
   .pipe(sourcemaps.init())
   .pipe(sass({
     outputStyle: 'expanded',
-    sourceComments: false,
-    onError: browserSync.notify
+    sourceComments: false
   }))
   .pipe(autoprefixer({
     Browserslist: ['> 1%']
@@ -93,6 +93,12 @@ task('es6', () => src(`${_.es6}/**/*.es6`)
   }))
   .pipe(sourcemaps.write('./'))
   .pipe(dest(_.js))
+)
+/**
+ *  Pickup images and move to app/img folder
+ */
+task('opt-img', () => src(`${_.assets}/**/*.{png,jpg,jpeg,gif,ico}`)
+  .pipe(dest(_.img))
 )
 
 // Build Task
@@ -150,27 +156,27 @@ task('watch', () => {
   watch(`${_.es6}/**/*.es6`, parallel('es6'))
   // Watch template files
   watch(`${_.tmpl}/**/*.html`, parallel('html'))
+  // Watch image files
+  watch(`${_.assets}/**/*.{png,jpg,jpeg,gif,ico}`, parallel('opt-img'))
 
   // Watch for reload
   watch([
     `${_.js}/**/*.js`,
     `${_.app}/*.html`,
     `${_.img}/**/*.{png,jpg,jpeg,gif,ico}`
-  ], done => {
-    browserSync.reload()
-    done()
-  })
+  ]).on('change', browserSync.reload)
 })
 
 // Utility Task
 /**
  * Clean folder
  */
-task('clean', () => del([_.dist]))
+task('clean-app', () => del([_.app]))
+task('clean-dist', () => del([_.dist]))
 /**
  * Run a server and open project
  */
-task('run-proj', () => {
+task('runner', () => {
   browserSync.init({
     ui: false,
     server: { baseDir: './' },
@@ -182,10 +188,10 @@ task('run-proj', () => {
 /**
  * Start the proje (main task)
  */
-task('start', series('scss', 'es6', 'html', 'run-proj'))
+task('start', series('clean-app', 'scss', 'es6', 'html', 'opt-img', 'runner'))
 
 exports.default = parallel('start', 'watch')
 /**
 * Build files to dist
 */
-exports.build = series('scss', 'es6', 'html', 'clean', 'assets', 'image', 'html-minify', 'js-minify', 'css-minify')
+exports.build = series('clean-app', 'scss', 'es6', 'html', 'opt-img', 'clean-dist', 'assets', 'image', 'html-minify', 'js-minify', 'css-minify')

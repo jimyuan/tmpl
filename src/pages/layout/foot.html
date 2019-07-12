@@ -1,8 +1,10 @@
 <!-- build:js ./js/vendor.js -->
-<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../node_modules/jquery/dist/jquery.slim.js"></script>
 <script src="../node_modules/art-template/lib/template-web.js"></script>
-<!-- endbuild -->
-<!-- build:js ./js/docs.js -->
 <script src="js/docs.js"></script>
-<script src="js/pages.js"></script>
 <!-- endbuild -->
+@@if (js != "") {
+<!-- build:js ./js/@@js.js -->
+<script src="js/@@js.js"></script>
+<!-- endbuild -->
+}

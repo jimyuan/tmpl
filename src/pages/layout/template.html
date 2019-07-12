@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  @@include('./head.html')
+  <body>
+    @@include('./nav.html')
+    <div class="container">
+      @@include("../partial/@@name.html")
+    </div>
+    @@include('./foot.html', {
+      "js": "@@js"
+    })
+  </body>
+</html>

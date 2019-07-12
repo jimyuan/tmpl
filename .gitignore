@@ -1,9 +1,6 @@
 .DS_Store
 .sass-cache
-dist
 *.zip
-app/*.html
-app/css
-app/js
+app
+dist
 node_modules
-bower_components
