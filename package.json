@@ -21,21 +21,21 @@
   },
   "dependencies": {
     "art-template": "^4.13.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "normalize.css": "^8.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
-    "babel-eslint": "^10.0.2",
-    "browser-sync": "^2.18.0",
-    "del": "^4.1.1",
-    "eslint": "^6.0.1",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-eslint": "^10.1.0",
+    "browser-sync": "^2.26.7",
+    "del": "^5.1.0",
+    "eslint": "^6.8.0",
     "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^6.1.0",
+    "gulp-autoprefixer": "^7.0.1",
     "gulp-babel": "^8.0.0",
-    "gulp-clean-css": "^4.2.0",
-    "gulp-file-include": "^2.0.1",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-file-include": "^2.1.1",
     "gulp-htmlmin": "^5.0.1",
     "gulp-plumber": "^1.2.1",
     "gulp-sass": "^4.0.2",
@@ -43,7 +43,7 @@
     "gulp-scss-lint-stylish": "^1.0.1",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
-    "gulp-useref": "^3.1.6",
-    "gulp-zip": "^5.0.0"
+    "gulp-useref": "^4.0.1",
+    "gulp-zip": "^5.0.1"
   }
 }
